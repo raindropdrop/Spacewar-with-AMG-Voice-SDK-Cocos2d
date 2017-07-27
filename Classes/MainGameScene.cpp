@@ -308,6 +308,13 @@ void MainGame::onAudioEnableBtnClicked(ui::Button* btn)
         rtcEngine->joinChannel(sceneMgr->config.channel.c_str(), "Cocos2d", 0);
         rtcEngine->enableAudioVolumeIndication(200, 3);
         SceneMgr::getInstance()->config.ts = nowTs;
+        
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+        std::string file = FileUtils::getInstance()->fullPathForFilename(PEW_PEW_SFX);
+#elif (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+        const string& file = FileUtils::getInstance()->getWritablePath() + PEW_PEW_SFX;
+#endif
+        AgoraRtcEngineForGaming_getInstance()->getAudioEffectManager()->preloadEffect(1, file.c_str());
     } else {
         rtcEngine->leaveChannel();
         SceneMgr::getInstance()->config.ts = 0;
@@ -483,9 +490,7 @@ void MainGame::doPlayEffect(bool useAgoraMixing)
 
         CCLOG("doPlayEffect %s in channel %s path %s ", useAgoraMixing ? "true" : "false", inChannel ? "true" : "false", file.c_str());
 
-        struct timeval tv;
-        gettimeofday(&tv,NULL);
-        AgoraRtcEngineForGaming_getInstance()->getAudioEffectManager()->playEffect(tv.tv_sec * 1000 + tv.tv_usec / 1000, file.c_str());
+        AgoraRtcEngineForGaming_getInstance()->getAudioEffectManager()->playEffect(1, file.c_str());
     } else {
         SimpleAudioEngine::getInstance()->playEffect(PEW_PEW_SFX);
     }
