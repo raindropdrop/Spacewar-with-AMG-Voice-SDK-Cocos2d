@@ -89,7 +89,7 @@ void AppDelegate::applicationDidEnterBackground() {
 
     // if you use SimpleAudioEngine, it must be paused
     // SimpleAudioEngine::getInstance()->pauseBackgroundMusic();
-    auto rtcEngine = AgoraRtcEngineForGaming_getInstance();
+    auto rtcEngine = AgoraRtcEngineForGaming_getInstance(AGORA_APP_ID);
     rtcEngine->pause();
 }
 
@@ -99,6 +99,6 @@ void AppDelegate::applicationWillEnterForeground() {
 
     // if you use SimpleAudioEngine, it must resume here
     // SimpleAudioEngine::getInstance()->resumeBackgroundMusic();
-    auto rtcEngine = AgoraRtcEngineForGaming_getInstance();
+    auto rtcEngine = AgoraRtcEngineForGaming_getInstance(AGORA_APP_ID);
     rtcEngine->resume();
 }

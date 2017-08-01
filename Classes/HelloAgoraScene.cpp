@@ -72,7 +72,7 @@ bool HelloAgora::init()
     std::stringstream title;
     title << "Agora Gaming Demo";
     title << " ";
-    title << AgoraRtcEngineForGaming_getVersion();
+    title << AgoraRtcEngineForGaming_getInstance(AGORA_APP_ID)->getVersion();
     auto label = Label::createWithTTF(title.str().c_str(), "fonts/Marker Felt.ttf", 24);
 
     // position the label on the center of the screen
@@ -162,7 +162,7 @@ bool HelloAgora::init()
 
     SceneMgr::getInstance()->addScene(this, "Main");
 
-    auto rtcEngine = AgoraRtcEngineForGaming_getInstance();
+    auto rtcEngine = AgoraRtcEngineForGaming_getInstance(AGORA_APP_ID);
     rtcEngine->setLogFilter(34781);
     std::string log_file = FileUtils::getInstance()->getWritablePath() + RTC_SDK_LOG_FILE;
     CCLOG("setLogFile %s", log_file.c_str());

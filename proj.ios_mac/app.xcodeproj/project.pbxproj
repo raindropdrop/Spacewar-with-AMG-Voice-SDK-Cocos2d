@@ -62,6 +62,9 @@
 		2F1F05E01E729CD300244919 /* HelloAgora.png in Resources */ = {isa = PBXBuildFile; fileRef = 2F1F05D91E729CD300244919 /* HelloAgora.png */; };
 		2F1F05E11E729CD300244919 /* TextBox.png in Resources */ = {isa = PBXBuildFile; fileRef = 2F1F05DA1E729CD300244919 /* TextBox.png */; };
 		2F1F05E21E729CD300244919 /* TextBox.png in Resources */ = {isa = PBXBuildFile; fileRef = 2F1F05DA1E729CD300244919 /* TextBox.png */; };
+		2F32B2A11F3104960056E2A9 /* libagoraSdkCWrapper.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2F32B2A01F3104960056E2A9 /* libagoraSdkCWrapper.a */; };
+		2F32B2A51F3104D10056E2A9 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2F32B2A41F3104D10056E2A9 /* CoreVideo.framework */; };
+		2F32B2A61F3104ED0056E2A9 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2F32B2A21F3104B90056E2A9 /* CoreMedia.framework */; };
 		2F8E06081EB1C28E005A48BA /* AgoraAudioKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2F8E06071EB1C28E005A48BA /* AgoraAudioKit.framework */; };
 		2FDCF0CF1E752AEA00C2AB84 /* MainGameScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2FDCF0CB1E752AEA00C2AB84 /* MainGameScene.cpp */; };
 		2FDCF0D01E752AEA00C2AB84 /* PeerSquareLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2FDCF0CD1E752AEA00C2AB84 /* PeerSquareLayer.cpp */; };
@@ -212,6 +215,9 @@
 		2F1F05D91E729CD300244919 /* HelloAgora.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = HelloAgora.png; sourceTree = "<group>"; };
 		2F1F05DA1E729CD300244919 /* TextBox.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TextBox.png; sourceTree = "<group>"; };
 		2F1F05F61E72CBF100244919 /* AgoraAudioKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AgoraAudioKit.framework; path = ../AgoraGamingSDK/libs/iOS/AgoraAudioKit.framework; sourceTree = "<group>"; };
+		2F32B2A01F3104960056E2A9 /* libagoraSdkCWrapper.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libagoraSdkCWrapper.a; path = ../AgoraGamingSDK/libs/iOS/libagoraSdkCWrapper.a; sourceTree = "<group>"; };
+		2F32B2A21F3104B90056E2A9 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS10.3.sdk/System/Library/Frameworks/CoreMedia.framework; sourceTree = DEVELOPER_DIR; };
+		2F32B2A41F3104D10056E2A9 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS10.3.sdk/System/Library/Frameworks/CoreVideo.framework; sourceTree = DEVELOPER_DIR; };
 		2F8E06071EB1C28E005A48BA /* AgoraAudioKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AgoraAudioKit.framework; path = ../AgoraGamingSDK/libs/iOS/AgoraAudioKit.framework; sourceTree = "<group>"; };
 		2FDCF0CB1E752AEA00C2AB84 /* MainGameScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MainGameScene.cpp; sourceTree = "<group>"; };
 		2FDCF0CC1E752AEA00C2AB84 /* MainGameScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainGameScene.h; sourceTree = "<group>"; };
@@ -286,6 +292,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2F32B2A61F3104ED0056E2A9 /* CoreMedia.framework in Frameworks */,
+				2F32B2A51F3104D10056E2A9 /* CoreVideo.framework in Frameworks */,
+				2F32B2A11F3104960056E2A9 /* libagoraSdkCWrapper.a in Frameworks */,
 				2F1F05CD1E729B6700244919 /* CoreTelephony.framework in Frameworks */,
 				294D0D641D0D56D500F7F5D4 /* CoreText.framework in Frameworks */,
 				ED545A7C1B68A1F400C3958E /* libiconv.dylib in Frameworks */,
@@ -380,6 +389,9 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				2F32B2A41F3104D10056E2A9 /* CoreVideo.framework */,
+				2F32B2A21F3104B90056E2A9 /* CoreMedia.framework */,
+				2F32B2A01F3104960056E2A9 /* libagoraSdkCWrapper.a */,
 				2F12EB6B1E852C0A00EBC2B4 /* libresolv.tbd */,
 				2F1F05F61E72CBF100244919 /* AgoraAudioKit.framework */,
 				2F1F05CC1E729B6700244919 /* CoreTelephony.framework */,
@@ -798,6 +810,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer: Yuhua Gong (TH5SJ72C94)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COMPRESS_PNG_FILES = NO;
 				DEVELOPMENT_TEAM = 48TB6ZZL5S;
 				ENABLE_BITCODE = NO;
@@ -815,15 +828,15 @@
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = ios/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
-				LIBRARY_SEARCH_PATHS = "";
+				LIBRARY_SEARCH_PATHS = "\"$(SRCROOT)/../AgoraGamingSDK/libs/iOS\"";
 				OTHER_LDFLAGS = (
 					"$(_COCOS_LIB_IOS_BEGIN)",
 					"$(_COCOS_LIB_IOS_END)",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = io.agora.gaming.cocos2d.spacewar;
 				PRODUCT_NAME = "app-mobile";
-				PROVISIONING_PROFILE = "a1037fd5-29b7-4531-a19c-8f37f2f15489";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE = "87f6e50f-6472-4e90-a6d4-f19c7bd21f23";
+				PROVISIONING_PROFILE_SPECIFIER = AgoraIODev2017;
 				SDKROOT = iphoneos;
 				STRIP_PNG_TEXT = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -839,6 +852,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Agora Lab, Inc. (48TB6ZZL5S)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COMPRESS_PNG_FILES = NO;
 				DEVELOPMENT_TEAM = 48TB6ZZL5S;
 				ENABLE_BITCODE = NO;
@@ -855,15 +869,15 @@
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = ios/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
-				LIBRARY_SEARCH_PATHS = "";
+				LIBRARY_SEARCH_PATHS = "\"$(SRCROOT)/../AgoraGamingSDK/libs/iOS\"";
 				OTHER_LDFLAGS = (
 					"$(_COCOS_LIB_IOS_BEGIN)",
 					"$(_COCOS_LIB_IOS_END)",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = io.agora.gaming.cocos2d.spacewar;
 				PRODUCT_NAME = "app-mobile";
-				PROVISIONING_PROFILE = "e2c40d34-a180-447e-8c83-9be2f3c55c87";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE = "87f6e50f-6472-4e90-a6d4-f19c7bd21f23";
+				PROVISIONING_PROFILE_SPECIFIER = AgoraIODev2017;
 				SDKROOT = iphoneos;
 				STRIP_PNG_TEXT = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";

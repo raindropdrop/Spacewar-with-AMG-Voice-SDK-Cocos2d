@@ -28,10 +28,11 @@
 #import "AppDelegate.h"
 #import "RootViewController.h"
 
-#import <AgoraAudioKit/AgoraRtcEngineKitForGaming.h>
-
 #include "../../AgoraGamingSDK/include/AgoraGamingRtcHelper.h"
 #include "../../AgoraGamingSDK/include/IAgoraRtcEngineForGaming.h"
+
+// for AGORA_APP_ID
+#include "../../Classes/SceneMgr.h"
 
 @implementation AppController
 
@@ -43,13 +44,7 @@
 // cocos2d application instance
 static AppDelegate s_sharedApplication;
 
-// PLEASE KEEP THIS App ID IN SAFE PLACE -->
-// Get your own App ID at https://dashboard.agora.io/ -->
-static NSString *appId = <#Your App Id#>;
-
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-
-    AgoraRtcEngineKitForGaming *rtcEngine = [AgoraRtcEngineKitForGaming sharedEngineWithAppId:appId delegate:nil];
 
     cocos2d::Application *app = cocos2d::Application::getInstance();
 
@@ -100,7 +95,7 @@ static NSString *appId = <#Your App Id#>;
      */
     // We don't need to call this method any more. It will interrupt user defined game pause&resume logic
     /* cocos2d::Director::getInstance()->pause(); */
-    auto rtcEngine = AgoraRtcEngineForGaming_getInstance();
+    auto rtcEngine = AgoraRtcEngineForGaming_getInstance(AGORA_APP_ID);
     rtcEngine->pause();
 }
 
@@ -110,7 +105,7 @@ static NSString *appId = <#Your App Id#>;
      */
     // We don't need to call this method any more. It will interrupt user defined game pause&resume logic
     /* cocos2d::Director::getInstance()->resume(); */
-    auto rtcEngine = AgoraRtcEngineForGaming_getInstance();
+    auto rtcEngine = AgoraRtcEngineForGaming_getInstance(AGORA_APP_ID);
     rtcEngine->resume();
 }
 

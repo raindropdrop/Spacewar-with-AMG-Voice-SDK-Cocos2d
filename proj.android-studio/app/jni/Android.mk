@@ -6,6 +6,11 @@ LOCAL_SRC_FILES := ../../../AgoraGamingSDK/libs/Android/$(TARGET_ARCH_ABI)/libag
 include $(PREBUILT_SHARED_LIBRARY)
 
 include $(CLEAR_VARS)
+LOCAL_MODULE := agora-rtc-wrapper
+LOCAL_SRC_FILES := ../../../AgoraGamingSDK/libs/Android/$(TARGET_ARCH_ABI)/libagoraSdkCWrapper.so
+include $(PREBUILT_SHARED_LIBRARY)
+
+include $(CLEAR_VARS)
 $(call import-add-path,$(LOCAL_PATH)/../../../cocos2d)
 $(call import-add-path,$(LOCAL_PATH)/../../../cocos2d/external)
 $(call import-add-path,$(LOCAL_PATH)/../../../cocos2d/cocos)
@@ -31,7 +36,7 @@ LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../../Classes \
 
 LOCAL_STATIC_LIBRARIES := cocos2dx_static
 
-LOCAL_SHARED_LIBRARIES := agora-rtc
+LOCAL_SHARED_LIBRARIES := agora-rtc agora-rtc-wrapper
 
 include $(BUILD_SHARED_LIBRARY)
 

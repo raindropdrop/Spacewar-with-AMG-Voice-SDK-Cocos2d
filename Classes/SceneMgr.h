@@ -4,6 +4,13 @@
 
 #include "RtcScene.h"
 
+// PLEASE KEEP THIS App ID IN SAFE PLACE -->
+// Get your own App ID at https://dashboard.agora.io/
+// After you entered the App ID, remove <##> outside of Your App ID
+// For formal released project, please use Dynamic Key
+// http://docs.agora.io/en/user_guide/Component_and_Others/Dynamic_Key_User_Guide.html
+#define AGORA_APP_ID <#YOUR APP ID#>
+
 class SceneMgr
 {
 public :
