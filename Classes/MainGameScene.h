@@ -70,6 +70,7 @@ public:
 
 public:
     void addMonster(float dt);
+    void addStar(float dt);
     bool onContactBegan(PhysicsContact &contact);
     bool onTouchBegan(Touch *touch, Event *unused_event) override;
 

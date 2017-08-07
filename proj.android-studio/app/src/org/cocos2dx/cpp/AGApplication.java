@@ -13,7 +13,7 @@ public class AGApplication extends Application {
 
     // PLEASE KEEP THIS App ID IN SAFE PLACE -->
     // Get your own App ID at https://dashboard.agora.io/ -->
-    private static final String appId = <#YOUR APP ID#>;
+    private static final String appId = "YOUR APP ID";
 
     @Override
     public void onCreate() {

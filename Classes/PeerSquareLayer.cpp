@@ -9,7 +9,7 @@ bool PeerSquareLayer::init()
         return false;
     }
 
-    if (!LayerColor::initWithColor(Color4B::BLUE, 300, 120)) // RGBA
+    if (!LayerColor::initWithColor(Color4B::BLACK, 300, 120)) // RGBA
     {
         return false;
     }

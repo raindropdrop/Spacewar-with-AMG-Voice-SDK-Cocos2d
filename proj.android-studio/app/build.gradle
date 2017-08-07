@@ -13,6 +13,7 @@ android {
     }
 
     sourceSets.main {
+//        jni.srcDirs = ["jni"]
         java.srcDir "src"
         res.srcDir "res"
         jniLibs.srcDir "libs"

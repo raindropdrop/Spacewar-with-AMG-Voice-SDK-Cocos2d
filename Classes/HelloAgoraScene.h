@@ -3,7 +3,10 @@
 
 #include "RtcScene.h"
 
+#include <string.h>
+
 #include "ui/UIEditBox/UIEditBox.h"
+
 
 USING_NS_CC;
 
@@ -32,6 +35,10 @@ public:
     void onEnter() override;
 
     void onExit() override;
+
+    // void setEditBoxText(const char* text);
+
+    // void setModeSelected(int index);
 
 private:
     void onJoinChannelClicked();

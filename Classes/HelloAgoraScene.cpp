@@ -14,6 +14,8 @@
 
 #include "SceneMgr.h"
 
+#include <string.h>
+
 USING_NS_CC;
 
 #define RTC_SDK_LOG_FILE      "rtc_sdk_amg.log"
@@ -28,6 +30,12 @@ Scene* HelloAgora::createScene()
 
     // add layer as a child to scene
     scene->addChild(layer);
+
+    // this->setEditBoxText(cName);
+
+    // this->setModeSelected(index);
+
+
 
     // return the scene
     return scene;
@@ -50,24 +58,26 @@ bool HelloAgora::init()
     // 2. add a menu item with "X" image, which is clicked to quit the program
     //    you may modify it.
 
-    // add a "close" icon to exit the progress. it's an autorelease object
-    auto closeItem = MenuItemImage::create(
-                                           "CloseNormal.png",
-                                           "CloseSelected.png",
-                                           CC_CALLBACK_1(HelloAgora::menuCloseCallback, this));
+    // // add a "close" icon to exit the progress. it's an autorelease object
+    // auto closeItem = MenuItemImage::create(
+    //                                        "CloseNormal.png",
+    //                                        "CloseSelected.png",
+    //                                        CC_CALLBACK_1(HelloAgora::menuCloseCallback, this));
 
-    closeItem->setPosition(Vec2(origin.x + visibleSize.width - closeItem->getContentSize().width / 2 ,
-                                origin.y + closeItem->getContentSize().height / 2));
+    // closeItem->setPosition(Vec2(origin.x + visibleSize.width - closeItem->getContentSize().width ,
+    //                             origin.y + visibleSize.height - closeItem->getContentSize().height));
 
-    // create menu, it's an autorelease object
-    auto menu = Menu::create(closeItem, NULL);
-    menu->setPosition(Vec2::ZERO);
-    this->addChild(menu, 1);
+    // // create menu, it's an autorelease object
+    // auto menu = Menu::create(closeItem, NULL);
+    // menu->setPosition(Vec2::ZERO);
+    // this->addChild(menu, 1);
 
     /////////////////////////////
     // 3. add your codes below...
 
     // create and initialize a label
+
+    int padding = 80;
 
     std::stringstream title;
     title << "Agora Gaming Demo";
@@ -77,17 +87,20 @@ bool HelloAgora::init()
 
     // position the label on the center of the screen
     label->setPosition(Vec2(origin.x + visibleSize.width / 2,
-                            origin.y + visibleSize.height - label->getContentSize().height));
+                            origin.y + visibleSize.height / 2 + label->getContentSize().height * 2 + padding / 2));
 
     // add the label as a child to this layer
     this->addChild(label, 1);
 
-    mChannelEditBox = ui::EditBox::create(Size(160, 40), "TextBox.png");
-    mChannelEditBox->setPosition(Vec2(origin.x + visibleSize.width / 2, origin.y + visibleSize.height - mChannelEditBox->getContentSize().height * 1.5 - label->getContentSize().height));
+    mChannelEditBox = ui::EditBox::create(Size(160, 30), "TextBox.png");
+    mChannelEditBox->setPosition(Vec2(origin.x + visibleSize.width / 2, 
+                                    origin.y + visibleSize.height / 2 + padding / 2));
+    mChannelEditBox->setPlaceHolder("channel name");
+    mChannelEditBox->setPlaceholderFontSize(12);
+    mChannelEditBox->setText(SceneMgr::getInstance()->config.channel.c_str());
+    mChannelEditBox->setFontSize(12);
 
     this->addChild(mChannelEditBox, 0);
-
-    int padding = 80;
 
 //    auto setModeButton = ui::Button::create("Button.png", "ButtonPressed.png", "ButtonPressed.png");
 //    setModeButton->setTitleText("Mode");
@@ -111,30 +124,31 @@ bool HelloAgora::init()
 
     auto labelMode = Label::createWithSystemFont("Choose Mode",
                                                  "Arial",
-                                                 18);
+                                                 10);
     mModeListBox = DropDownListBox::Create(labelMode, box_size, box_size);
     auto label1 = Label::createWithSystemFont("Free Mode",
                                               "Arial",
-                                              18);
+                                              10);
     mModeListBox->AddLabel(label1);
     auto label2 = Label::createWithSystemFont("Commander Mode",
                                               "Arial",
-                                              18);
+                                              10);
     mModeListBox->AddLabel(label2);
     auto label3 = Label::createWithSystemFont("Audience Mode",
                                               "Arial",
-                                              18);
+                                              10);
     mModeListBox->AddLabel(label3);
 
     mModeListBox->setPosition(Vec2(origin.x + mModeListBox->getContentSize().width / 2,
-                               origin.y + visibleSize.height / 2 - mModeListBox->getContentSize().height));
+                               origin.y + visibleSize.height / 2 - mModeListBox->getContentSize().height - label->getContentSize().height + padding / 2));
     mModeListBox->SetSelectedIndex(0);
     this->addChild(mModeListBox);
     mModeListBox->OpenListener();
 
     auto joinButton = ui::Button::create("Button.png", "ButtonPressed.png", "ButtonPressed.png");
     joinButton->setTitleText("Join");
-    joinButton->setPosition(Vec2(origin.x + visibleSize.width - padding - joinButton->getContentSize().width / 2, origin.y + visibleSize.height / 2 -  joinButton->getContentSize().height / 2));
+    joinButton->setPosition(Vec2(origin.x + visibleSize.width / 2 + padding, 
+        origin.y + visibleSize.height / 2 -  joinButton->getContentSize().height / 2 - label->getContentSize().height + padding / 2));
 
     joinButton->addTouchEventListener([&](cocos2d::Ref* sender, ui::Widget::TouchEventType type) {
         switch (type)
@@ -151,14 +165,14 @@ bool HelloAgora::init()
 
     this->addChild(joinButton, 0);
 
-    // add "HelloAgora" splash screen"
-    auto sprite = Sprite::create("HelloAgora.png");
+    // // add "HelloAgora" splash screen"
+    // auto sprite = Sprite::create("HelloAgora.png");
 
-    sprite->setPosition(Vec2(origin.x + visibleSize.width - sprite->getContentSize().width / 2 ,
-                             visibleSize.height / 2 + origin.y));
+    // sprite->setPosition(Vec2(origin.x + visibleSize.width - sprite->getContentSize().width / 2 ,
+    //                          visibleSize.height / 2 + origin.y));
 
-    // add the sprite as a child to this layer
-    this->addChild(sprite, 0);
+    // // add the sprite as a child to this layer
+    // this->addChild(sprite, 0);
 
     SceneMgr::getInstance()->addScene(this, "Main");
 
@@ -193,6 +207,16 @@ void HelloAgora::onJoinChannelClicked()
         return;
     }
 
+    if (SceneMgr::getInstance()->config.cft == agora::rtc::CHANNEL_PROFILE_GAME_FREE_MODE) {
+        mModeListBox->SetSelectedIndex(0);
+    } else if (SceneMgr::getInstance()->config.cft == agora::rtc::CHANNEL_PROFILE_GAME_COMMAND_MODE && 
+        SceneMgr::getInstance()->config.crt == agora::rtc::CLIENT_ROLE_BROADCASTER) {
+        mModeListBox->SetSelectedIndex(1);
+    } else if (SceneMgr::getInstance()->config.cft == agora::rtc::CHANNEL_PROFILE_GAME_COMMAND_MODE && 
+        SceneMgr::getInstance()->config.crt == agora::rtc::CLIENT_ROLE_AUDIENCE) {
+        mModeListBox->SetSelectedIndex(2);
+    }
+
     if (0 == mModeListBox->GetSelectedIndex()) {
         SceneMgr::getInstance()->config.cft = agora::rtc::CHANNEL_PROFILE_GAME_FREE_MODE;
     } else if (1 == mModeListBox->GetSelectedIndex()) {
@@ -208,17 +232,27 @@ void HelloAgora::onJoinChannelClicked()
     Director::getInstance()->replaceScene(MainGame::createScene());
 }
 
-void HelloAgora::menuCloseCallback(Ref* pSender)
-{
-    // Close the cocos2d-x game scene and quit the application
-    Director::getInstance()->end();
+// void HelloAgora::setEditBoxText(const char* text){
+//     mChannelEditBox->setText(text);
+// }
 
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    exit(0);
-#endif
+// void HelloAgora::setModeSelected(int index){
+//     mModeListBox->SetSelectedIndex(index);
+// }
 
-    /*To navigate back to native iOS screen(if present) without quitting the application, do not use Director::getInstance()->end() and exit(0) as given above, instead trigger a custom event created in RootViewController.mm as below*/
+// void HelloAgora::menuCloseCallback(Ref* pSender)
+// {
+//     // Close the cocos2d-x game scene and quit the application
+//     Director::getInstance()->end();
+
+// #if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+//     exit(0);
+// #endif
+
+    /*To navigate back to native iOS screen(if present) without quitting the application, 
+    do not use Director::getInstance()->end() and exit(0) as given above, 
+    instead trigger a custom event created in RootViewController.mm as below*/
 
     // EventCustom customEndEvent("game_scene_close_event");
     // _eventDispatcher->dispatchEvent(&customEndEvent);
-}
+// }

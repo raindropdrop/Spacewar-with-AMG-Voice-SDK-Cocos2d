@@ -1,4 +1,5 @@
 #include "MainGameScene.h"
+#include "HelloAgoraScene.h"
 
 #include "PeerSquareLayer.h"
 
@@ -99,7 +100,8 @@ enum class PhysicsCategory {
     None = 0,
     Monster = (1 << 0),    // 1
     Projectile = (1 << 1), // 2
-    All = PhysicsCategory::Monster | PhysicsCategory::Projectile // 3
+    Star = (1 << 2), // 3
+    All = PhysicsCategory::Monster | PhysicsCategory::Projectile | PhysicsCategory::Star// 3
 };
 
 Scene* MainGame::createScene()
@@ -139,8 +141,8 @@ bool MainGame::init()
                                            "CloseSelected.png",
                                            CC_CALLBACK_1(MainGame::menuCloseCallback, this));
 
-    closeItem->setPosition(Vec2(origin.x + visibleSize.width - closeItem->getContentSize().width / 2 ,
-                                origin.y + closeItem->getContentSize().height / 2));
+    closeItem->setPosition(Vec2(origin.x + visibleSize.width - closeItem->getContentSize().width ,
+                                origin.y + visibleSize.height - closeItem->getContentSize().height));
 
     // create menu, it's an autorelease object
     auto menu = Menu::create(closeItem, NULL);
@@ -149,12 +151,12 @@ bool MainGame::init()
 
     // 3
     auto background = DrawNode::create();
-    background->drawSolidRect(origin, visibleSize, Color4F(0.6, 0.6, 0.6, 1.0));
+    background->drawSolidRect(origin, visibleSize, Color4F(0, 0, 0, 0));
     this->addChild(background);
 
     // 4
     _player = Sprite::create("player.png");
-    _player->setPosition(Vec2(visibleSize.width * 0.5 - _player->getContentSize().width / 2, visibleSize.height * 0.1));
+    _player->setPosition(Vec2(visibleSize.width * 0.5, visibleSize.height * 0.2));
     this->addChild(_player);
 
     mSpeakerSquare = PeerSquareLayer::create();
@@ -170,6 +172,7 @@ bool MainGame::init()
     auto enableAudioButton = ui::Button::create("btn_speaker.png", "btn_speaker_enabled.png", "btn_speaker.png");
     auto muteAudioButton = ui::Button::create("btn_mute.png", "btn_mute_enabled.png", "btn_mute.png");
     auto commanderModeButton = ui::Button::create("btn_commander.png", "btn_commander_enabled.png", "btn_commander.png");
+
     mBroadcasterAudienceSwitch = ControlSwitch::create(
                                                            Sprite::create("switch-mask-hd.png"),
                                                            Sprite::create("switch-on-hd.png"),
@@ -187,10 +190,16 @@ bool MainGame::init()
     int padding = 10;
     int sizew = enableAudioButton->getContentSize().width;
     int sizeh = enableAudioButton->getContentSize().height;
-    int x = origin.x + visibleSize.width / 2;
-    int y = origin.y + sizeh;
+    int x = origin.x + sizew;
+    int y = origin.y + visibleSize.height / 2;
 
-    settingsButton->setPosition(Vec2(x - 2 * padding - 2 * sizew, y));
+    // int padding = 10;
+    // int sizew = enableAudioButton->getContentSize().width;
+    // int sizeh = enableAudioButton->getContentSize().height;
+    // int x = origin.x + visibleSize.width / 2;
+    // int y = origin.y + sizeh;
+
+    settingsButton->setPosition(Vec2(x, y + 2 * padding + 2 * sizeh));
 
     settingsButton->addTouchEventListener([&](cocos2d::Ref* sender, ui::Widget::TouchEventType type) {
         switch (type)
@@ -207,8 +216,7 @@ bool MainGame::init()
 
     this->addChild(settingsButton);
 
-    enableAudioButton->setPosition(Vec2(x - padding - sizew, y));
-
+    enableAudioButton->setPosition(Vec2(x, y + padding + sizeh));
     enableAudioButton->addTouchEventListener([&](cocos2d::Ref* sender, ui::Widget::TouchEventType type) {
         switch (type)
         {
@@ -216,6 +224,7 @@ bool MainGame::init()
                 break;
             case ui::Widget::TouchEventType::ENDED:
                 onAudioEnableBtnClicked(enableAudioButton);
+
                 break;
             default:
                 break;
@@ -241,7 +250,7 @@ bool MainGame::init()
 
     this->addChild(muteAudioButton);
 
-    commanderModeButton->setPosition(Vec2(x + padding + sizew, y));
+    commanderModeButton->setPosition(Vec2(x, y - padding - sizeh));
 
     commanderModeButton->addTouchEventListener([&](cocos2d::Ref* sender, ui::Widget::TouchEventType type) {
         switch (type)
@@ -258,10 +267,10 @@ bool MainGame::init()
 
     this->addChild(commanderModeButton);
 
-    mBroadcasterAudienceSwitch->setPosition(Vec2(x + 2 * padding + 2 * sizew, y));
+    mBroadcasterAudienceSwitch->setPosition(Vec2(x, y - 2 * padding - 2 * sizeh));
     this->addChild(mBroadcasterAudienceSwitch);
 
-    mMsgLabel->setPosition(Vec2(x + 3 * padding + 3 * sizew, y));
+    mMsgLabel->setPosition(Vec2(x, y - 3 * padding - 3 * sizeh));
     this->addChild(mMsgLabel);
 
     mChannelLabel->setPosition(Vec2(origin.x + visibleSize.width / 2, origin.y + visibleSize.height - mChannelLabel->getContentSize().height));
@@ -286,7 +295,7 @@ bool MainGame::init()
 }
 
 void MainGame::onAudioEnableBtnClicked(ui::Button* btn)
-{
+{   
     SceneMgr* sceneMgr = SceneMgr::getInstance();
     long long ts = sceneMgr->config.ts;
 
@@ -357,8 +366,11 @@ void MainGame::onEnter()
 
     doPlayBackgroundMusic(SceneMgr::getInstance()->config.useMixing);
 
-    srand((unsigned int)time(nullptr));
-    this->schedule(CC_SCHEDULE_SELECTOR(MainGame::addMonster), 1.5);
+    // srand((unsigned int)time(nullptr));
+    // this->schedule(CC_SCHEDULE_SELECTOR(MainGame::addMonster), 1.5);
+
+    srand((unsigned int)time(nullptr));    
+    this->schedule(CC_SCHEDULE_SELECTOR(MainGame::addStar), 1.5);
 
     auto eventListener = EventListenerTouchOneByOne::create();
     eventListener->onTouchBegan = CC_CALLBACK_2(MainGame::onTouchBegan, this);
@@ -379,9 +391,9 @@ void MainGame::onExit()
 
 void MainGame::popupLayer()
 {
-    SettingsPopupLayer* pl = SettingsPopupLayer::create("popup_bg.png");
+    SettingsPopupLayer* pl = SettingsPopupLayer::create("TextBox.png");
     pl->setContentSize(Size(320, 160));
-    pl->setColor(Color3B(250, 60, 60));
+    // pl->setColor(Color3B(1, 1, 1));
     pl->setCallbackFunc(this, CC_CALLFUNCN_SELECTOR(MainGame::onPopupButtonCallback));
     pl->onVolumeChanged = CC_CALLBACK_2(MainGame::onVolumeChanged, this);
     pl->onUseMixing = CC_CALLBACK_1(MainGame::onUseMixing, this);
@@ -529,57 +541,199 @@ void MainGame::update(float delta)
 }
 
 void MainGame::menuCloseCallback(Ref* pSender)
-{
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_WP8) || (CC_TARGET_PLATFORM == CC_PLATFORM_WINRT)
-    MessageBox("You pressed the close button. Windows Store Apps do not implement a close button.","Alert");
-    return;
-#endif
+{   
+    Director::getInstance()->replaceScene(HelloAgora::createScene());
 
-    Director::getInstance()->end();
+    // EventCustom customEndEvent("game_scene_close_event");
+    // _eventDispatcher->dispatchEvent(&customEndEvent);
+    // MessageBox("Hey","Alert");
+// #if (CC_TARGET_PLATFORM == CC_PLATFORM_WP8) || (CC_TARGET_PLATFORM == CC_PLATFORM_WINRT)
+//     MessageBox("You pressed the close button. Windows Store Apps do not implement a close button.","Alert");
+//     return;
+// #endif
 
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    exit(0);
-#endif
+//     Director::getInstance()->end();
+
+// #if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+//     exit(0);
+// #endif
 }
 
-void MainGame::addMonster(float dt) {
-    auto monster = Sprite::create("monster.png");
+// void MainGame::addMonster(float dt) {
+//     auto monster = Sprite::create("monster.png");
+
+//     // 1
+//     auto monsterSize = monster->getContentSize();
+//     auto physicsBody = PhysicsBody::createBox(Size(monsterSize.width , monsterSize.height),
+//                                               PhysicsMaterial(0.1f, 1.0f, 0.0f));
+//     // 2
+//     physicsBody->setDynamic(true);
+//     // 3
+//     physicsBody->setCategoryBitmask((int)PhysicsCategory::Monster);
+//     physicsBody->setCollisionBitmask((int)PhysicsCategory::None);
+//     physicsBody->setContactTestBitmask((int)PhysicsCategory::Projectile);
+
+//     monster->setPhysicsBody(physicsBody);
+
+//     // 1
+//     auto monsterContentSize = monster->getContentSize();
+//     auto selfContentSize = this->getContentSize();
+//     int minX = monsterContentSize.width / 2;
+//     int maxX = selfContentSize.width - monsterContentSize.width / 2;
+//     int rangeX = maxX - minX;
+//     int randomX = (rand() % rangeX) + minX;
+
+//     monster->setPosition(Vec2(randomX, selfContentSize.height + monsterContentSize.height / 2));
+//     this->addChild(monster);
+
+//     // 2
+//     int minDuration = 2.0;
+//     int maxDuration = 4.0;
+//     int rangeDuration = maxDuration - minDuration;
+//     int randomDuration = (rand() % rangeDuration) + minDuration;
+
+//     // 3
+//     auto actionMove = MoveTo::create(randomDuration, Vec2(randomX, -monsterContentSize.height / 2));
+//     auto actionRemove = RemoveSelf::create();
+//     monster->runAction(Sequence::create(actionMove, actionRemove, nullptr));
+// }
+
+
+void MainGame::addStar(float dt){
+    auto star = Sprite::create("sliderThumb.png");
+    auto star1 = Sprite::create("sliderThumb.png");
+    auto star2 = Sprite::create("sliderThumb.png");
 
     // 1
-    auto monsterSize = monster->getContentSize();
-    auto physicsBody = PhysicsBody::createBox(Size(monsterSize.width , monsterSize.height),
-                                              PhysicsMaterial(0.1f, 1.0f, 0.0f));
+    auto starSize = star->getContentSize();
+    auto star1Size = star1->getContentSize();
+    auto star2Size = star2->getContentSize();
+
+    float scale = ((double) rand() / (RAND_MAX)) + 0.3;
+    float scale1 = ((double) rand() / (RAND_MAX)) + 0.8;
+    float scale2 = ((double) rand() / (RAND_MAX)) + 0.1;
+
+    star->setScale(scale);
+    star1->setScale(scale1);
+    star2->setScale(scale2);
+
+    auto physicsBody = PhysicsBody::createBox(Size(starSize.width * scale, starSize.height * scale),
+                                              PhysicsMaterial(0.2f, 1.0f, 0.5f));
+    auto physicsBody1 = PhysicsBody::createBox(Size(star1Size.width * scale1 , star1Size.height * scale1),
+                                              PhysicsMaterial(0.2f, 1.0f, 0.5f));
+    auto physicsBody2 = PhysicsBody::createBox(Size(star2Size.width * scale2, star2Size.height * scale2),
+                                              PhysicsMaterial(0.2f, 1.0f, 0.5f));
     // 2
     physicsBody->setDynamic(true);
     // 3
-    physicsBody->setCategoryBitmask((int)PhysicsCategory::Monster);
+    physicsBody->setCategoryBitmask((int)PhysicsCategory::Star);
     physicsBody->setCollisionBitmask((int)PhysicsCategory::None);
-    physicsBody->setContactTestBitmask((int)PhysicsCategory::Projectile);
 
-    monster->setPhysicsBody(physicsBody);
+    star->setPhysicsBody(physicsBody);
 
-    // 1
-    auto monsterContentSize = monster->getContentSize();
-    auto selfContentSize = this->getContentSize();
-    int minX = monsterContentSize.width / 2;
-    int maxX = selfContentSize.width - monsterContentSize.width / 2;
-    int rangeX = maxX - minX;
-    int randomX = (rand() % rangeX) + minX;
-
-    monster->setPosition(Vec2(randomX, selfContentSize.height + monsterContentSize.height / 2));
-    this->addChild(monster);
 
     // 2
-    int minDuration = 2.0;
-    int maxDuration = 4.0;
+    physicsBody1->setDynamic(true);
+    // 3
+    physicsBody1->setCategoryBitmask((int)PhysicsCategory::Star);
+    physicsBody1->setCollisionBitmask((int)PhysicsCategory::None);    
+
+    star1->setPhysicsBody(physicsBody1);
+
+
+    // 2
+    physicsBody2->setDynamic(true);
+    // 3
+    physicsBody2->setCategoryBitmask((int)PhysicsCategory::Star);
+    physicsBody2->setCollisionBitmask((int)PhysicsCategory::None);
+
+    star2->setPhysicsBody(physicsBody2);
+
+
+    // 1
+    auto starContentSize = star->getContentSize();
+    auto star1ContentSize = star1->getContentSize();
+    auto star2ContentSize = star2->getContentSize();
+
+
+    auto selfContentSize = this->getContentSize();
+    int minX = starContentSize.width / 2;
+    int maxX = selfContentSize.width - starContentSize.width / 2;
+    int rangeX = maxX - minX;
+    int randomX = (rand() % rangeX) + minX;
+    int randomX1 = (rand() % rangeX) + minX;
+    int randomX2 = (rand() % rangeX) + minX;
+
+    star->setPosition(Vec2(randomX, selfContentSize.height + starContentSize.height / 2));
+    this->addChild(star);
+
+    star1->setPosition(Vec2(randomX1, selfContentSize.height + star1ContentSize.height / 2));
+    this->addChild(star1);
+
+    star2->setPosition(Vec2(randomX2, selfContentSize.height + star2ContentSize.height / 2));
+    this->addChild(star2);
+
+    // 2
+    int minDuration = 3.0;
+    int maxDuration = 5.0;
     int rangeDuration = maxDuration - minDuration;
     int randomDuration = (rand() % rangeDuration) + minDuration;
+    int randomDuration1 = (rand() % rangeDuration) + minDuration;
+    int randomDuration2 = (rand() % rangeDuration) + minDuration;
 
     // 3
-    auto actionMove = MoveTo::create(randomDuration, Vec2(randomX, -monsterContentSize.height / 2));
+    auto actionMove = MoveTo::create(randomDuration, Vec2(randomX, -starContentSize.height / 2));
     auto actionRemove = RemoveSelf::create();
-    monster->runAction(Sequence::create(actionMove, actionRemove, nullptr));
+
+    auto actionMove1 = MoveTo::create(randomDuration1, Vec2(randomX1, -star1ContentSize.height / 2));
+    auto actionRemove1 = RemoveSelf::create();
+
+    auto actionMove2 = MoveTo::create(randomDuration2, Vec2(randomX2, -star2ContentSize.height / 2));
+    auto actionRemove2 = RemoveSelf::create();
+
+    star->runAction(Sequence::create(actionMove, actionRemove, nullptr));
+    star1->runAction(Sequence::create(actionMove1, actionRemove1, nullptr));
+    star2->runAction(Sequence::create(actionMove2, actionRemove2, nullptr));
 }
+
+// void MainGame::addStar(float dt){
+//     auto star = Sprite::create("switch-thumb-hd.png");
+
+//     // 1
+//     auto starSize = star->getContentSize();
+//     auto physicsBody = PhysicsBody::createBox(Size(starSize.width , starSize.height),
+//                                               PhysicsMaterial(0.2f, 1.0f, 0.5f));
+//     // 2
+//     physicsBody->setDynamic(true);
+//     // 3
+//     physicsBody->setCategoryBitmask((int)PhysicsCategory::Star);
+//     physicsBody->setCollisionBitmask((int)PhysicsCategory::None);
+
+//     star->setPhysicsBody(physicsBody);
+
+//     // 1
+//     auto starContentSize = star->getContentSize();
+//     auto selfContentSize = this->getContentSize();
+//     int minX = starContentSize.width / 2;
+//     int maxX = selfContentSize.width - starContentSize.width / 2;
+//     int rangeX = maxX - minX;
+//     int randomX = (rand() % rangeX) + minX;
+
+//     star->setPosition(Vec2(randomX, selfContentSize.height + starContentSize.height / 2));
+//     this->addChild(star);
+
+//     // 2
+//     int minDuration = 1.0;
+//     int maxDuration = 3.0;
+//     int rangeDuration = maxDuration - minDuration;
+//     int randomDuration = (rand() % rangeDuration) + minDuration;
+
+//     // 3
+//     auto actionMove = MoveTo::create(randomDuration, Vec2(randomX, -starContentSize.height / 2));
+//     auto actionRemove = RemoveSelf::create();
+//     star->runAction(Sequence::create(actionMove, actionRemove, nullptr));
+// }
+
 
 bool MainGame::onTouchBegan(Touch *touch, Event *unused_event) {
     // 1  - Just an example for how to get the  _player object
